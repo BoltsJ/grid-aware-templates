@@ -1,0 +1,16 @@
+{
+	"id": "grid-aware-templates",
+	"title": "Grid Aware Templates",
+	"description": "",
+	"authors": [ { "name": "Bolts" } ],
+	"version": "0",
+	"compatibility": {
+		"minimum": "10",
+		"verified": "10"
+	},
+	"languages": [{ "lang": "en", "name": "English", "path": "lang/en.json" }],
+	"esmodules": ["gat.js"],
+	"url": "https://github.com/BoltsJ/grid-aware-templates.git",
+	"manifest": "",
+	"download": ""
+}
