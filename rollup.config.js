@@ -3,7 +3,7 @@ import copy from "rollup-plugin-copy";
 
 /** @type {import("rollup").RollupOptions} */
 export default {
-  input: "src/gat.mjs",
+  input: "src/gat.js",
   output: {
     dir: "dist",
     format: "es",
