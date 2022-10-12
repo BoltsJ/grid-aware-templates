@@ -7,8 +7,10 @@ const angle_epsilon = 1;
 export class GAMeasuredTemplate extends MeasuredTemplate {
   /** @override */
   _getGridHighlightPositions() {
+    /*
     if (!this.document.getFlag("grid-aware-templates", "enabled"))
       return super._getGridHighlightPositions();
+    */
     const grid = canvas.grid.grid;
     const [row, col] = grid.getGridPositionFromPixels(this.x, this.y);
     const base_area = this._getBaseArea(row, col);
@@ -20,7 +22,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
         const r0 = Ray.fromAngle(
           this.x,
           this.y,
-          (this.document.direction * Math.PI) / 180,
+          Math.toRadians(this.document.direction),
           1
         );
         return [
@@ -34,8 +36,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
               )
             );
             return (
-              theta <=
-              ((this.document.angle + angle_epsilon) * Math.PI) / 180 / 2
+              theta <= Math.toRadians(this.document.angle + angle_epsilon) / 2
             );
           }),
           (() => {
@@ -54,6 +55,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
    * @param {number} row
    * @param {number} col
    * @return {{x: number; x: number}[]}
+   * @protected
    */
   _getBaseArea(row, col) {
     if (!canvas?.ready) return [];
@@ -71,11 +73,10 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
   }
 
   /**
-   * Compute the maximal potential area the template could highlight. For hex
-   * and 1-1-1 square "circle" templates, this is the highlight.
    * @param {number} row
    * @param {number} col
    * @return {[x: number, y: number][]}
+   * @protected
    */
   _getBaseAreaSquare(row, col) {
     const grid = canvas.grid.grid;
@@ -102,11 +103,10 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
   }
 
   /**
-   * Compute the maximal potential area the template could highlight. For hex
-   * and 1-1-1 square "circle" templates, this is the highlight.
    * @param {number} row
    * @param {number} col
    * @return {[x: number; y: number][]}
+   * @protected
    */
   _getBaseAreaHex(row, col) {
     const grid = canvas.grid.grid;
