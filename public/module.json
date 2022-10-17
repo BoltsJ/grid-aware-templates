@@ -2,7 +2,7 @@
 	"id": "grid-aware-templates",
 	"title": "Grid Aware Templates",
 	"description": "",
-	"authors": [ { "name": "Bolts" } ],
+	"authors": [{ "name": "Bolts" }],
 	"version": "0",
 	"compatibility": {
 		"minimum": "10",
