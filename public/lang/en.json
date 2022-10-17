@@ -1,1 +1,8 @@
-{}
+{
+	"grid-aware-templates": {
+		"angleValue": {
+			"name": "Cone Angle",
+			"hint": "Override the system default angle for cones"
+		}
+	}
+}

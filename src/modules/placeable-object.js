@@ -19,6 +19,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
       case "circle":
         return base_area;
       case "cone":
+        // Create a unit vector in the template direction
         const r0 = Ray.fromAngle(
           this.x,
           this.y,
@@ -27,19 +28,18 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
         );
         return [
           ...base_area.filter(p => {
+            // Create a vector from the origin to the grid cell
             let r1 = Ray.fromArrays([this.x, this.y], grid.getCenter(p.x, p.y));
+            // Calculate the angle between the two rays
             const theta = Math.acos(
-              Math.clamped(
-                -1,
-                (r0.dx * r1.dx + r0.dy * r1.dy) / (r0.distance * r1.distance),
-                1
-              )
+              Math.clamped(-1, (r0.dx * r1.dx + r0.dy * r1.dy) / r1.distance, 1)
             );
             return (
               theta <= Math.toRadians(this.document.angle + angle_epsilon) / 2
             );
           }),
           (() => {
+            // Add the orgin point
             const tl = grid.getTopLeft(this.x, this.y);
             return { x: tl[0], y: tl[1] };
           })(),
@@ -54,7 +54,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
    * "circle" (radius) then this is the template.
    * @param {number} row
    * @param {number} col
-   * @return {{x: number; x: number}[]}
+   * @return {{x: number; y: number}[]}
    * @protected
    */
   _getBaseArea(row, col) {
@@ -105,7 +105,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
   /**
    * @param {number} row
    * @param {number} col
-   * @return {[x: number; y: number][]}
+   * @return {[x: number, y: number][]}
    * @protected
    */
   _getBaseAreaHex(row, col) {
@@ -125,6 +125,10 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
       .map(({ row, col }) => grid.getPixelsFromGridPosition(row, col));
   }
 
+  /**
+   * @return {number}
+   * @protected
+   */
   _getRadiusInSpaces() {
     return Math.round(
       this.document.distance / this.document.parent.grid.distance
