@@ -19,9 +19,11 @@ increments for size and 15° increments for rotation during creation.
 ## Screenshots
 
 Stock behavior for blast templates
+
 ![blast 1 stock](images/blast1-stock.png?raw=true "Blast 1 with stock
 templates")
 
 With Grid Aware templates
+
 ![blast 1 modded](images/blast1-modded.png?raw=true "Blast 1 with grid aware
 templates")
