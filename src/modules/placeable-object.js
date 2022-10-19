@@ -1,6 +1,24 @@
 const angle_epsilon = 1;
 
 /**
+ * Convert point array to point object
+ * @param arr {[x: number, y: number]}
+ * @returns {{ x: number; y: number }}
+ */
+function a2p([x, y]) {
+  return { x, y };
+}
+
+/**
+ * Convert point object to point array
+ * @param p {object}
+ * @param p.x {number}
+ * @param p.y {number}
+ * @returns {[x: number, y: number]}
+ */
+/* function p2a({ x, y }) {return [x, y];} */
+
+/**
  * Extends the MeasuredTemplates to allow for templates that use grid
  * measurements to highlight instead of a shape.
  */
@@ -34,11 +52,8 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
               theta <= Math.toRadians(this.document.angle + angle_epsilon) / 2
             );
           }),
-          (() => {
-            // Add the orgin point
-            const tl = grid.getTopLeft(this.x, this.y);
-            return { x: tl[0], y: tl[1] };
-          })(),
+          // Add the orgin point
+          a2p(grid.getTopLeft(this.x, this.y)),
         ];
     }
 
@@ -56,7 +71,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
   _getBaseArea(row, col) {
     if (!canvas?.ready) return [];
     if (this.document.parent.grid.type === CONST.GRID_TYPES.SQUARE)
-      return this._getBaseAreaSquare(row, col).map(([x, y]) => ({ x, y }));
+      return this._getBaseAreaSquare(row, col).map(a2p);
     if (
       [
         CONST.GRID_TYPES.HEXODDR,
@@ -65,7 +80,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
         CONST.GRID_TYPES.HEXEVENQ,
       ].includes(this.document.parent.grid.type)
     )
-      return this._getBaseAreaHex(row, col).map(([x, y]) => ({ x, y }));
+      return this._getBaseAreaHex(row, col).map(a2p);
   }
 
   /**
