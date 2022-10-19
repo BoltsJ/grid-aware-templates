@@ -7,10 +7,6 @@ const angle_epsilon = 1;
 export class GAMeasuredTemplate extends MeasuredTemplate {
   /** @override */
   _getGridHighlightPositions() {
-    /*
-    if (!this.document.getFlag("grid-aware-templates", "enabled"))
-      return super._getGridHighlightPositions();
-    */
     const grid = canvas.grid.grid;
     const [row, col] = grid.getGridPositionFromPixels(this.x, this.y);
     const base_area = this._getBaseArea(row, col);
@@ -28,11 +24,11 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
         );
         return [
           ...base_area.filter(p => {
-            // Create a vector from the origin to the grid cell
-            let r1 = Ray.fromArrays([this.x, this.y], grid.getCenter(p.x, p.y));
+            // Create a unit vector from the origin towards the grid cell
+            let r1 = Ray.towardsPoint(this, a2p(grid.getCenter(p.x, p.y)), 1);
             // Calculate the angle between the two rays
             const theta = Math.acos(
-              Math.clamped(-1, (r0.dx * r1.dx + r0.dy * r1.dy) / r1.distance, 1)
+              Math.clamped(-1, r0.dx * r1.dx + r0.dy * r1.dy, 1)
             );
             return (
               theta <= Math.toRadians(this.document.angle + angle_epsilon) / 2
@@ -81,10 +77,10 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
   _getBaseAreaSquare(row, col) {
     const grid = canvas.grid.grid;
     const spaces = [];
-    const d = this._getRadiusInSpaces();
+    const r = this._getRadiusInSpaces();
     const o = grid.getPixelsFromGridPosition(row, col);
-    for (let i = -d; i <= d; ++i) {
-      for (let j = -d; j <= d; ++j) {
+    for (let i = -r; i <= r; ++i) {
+      for (let j = -r; j <= r; ++j) {
         const ray = Ray.fromArrays(
           grid.getPixelsFromGridPosition(row + i, col + j),
           o
@@ -92,7 +88,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
         if (
           grid.measureDistances([{ ray }], { gridSpaces: true }) /
             this.document.parent.grid.distance <=
-          d
+          r
         )
           spaces.push({ row: row + i, col: col + j });
       }
@@ -110,12 +106,13 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
    */
   _getBaseAreaHex(row, col) {
     const grid = canvas.grid.grid;
+    /** @type {Record<string, number>} */
     const cube = grid.offsetToCube({ row, col });
 
     const cubes = [];
-    const d = this._getRadiusInSpaces();
-    for (let i = -d; i <= d; ++i) {
-      for (let j = Math.max(-d, -i - d); j <= Math.min(d, -i + d); ++j) {
+    const r = this._getRadiusInSpaces();
+    for (let i = -r; i <= r; ++i) {
+      for (let j = Math.max(-r, -i - r); j <= Math.min(r, -i + r); ++j) {
         const k = -i - j;
         cubes.push({ q: cube.q + i, r: cube.r + j, s: cube.s + k });
       }
