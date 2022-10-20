@@ -1,9 +1,11 @@
+/** @typedef {import("client/pixi/placeables/template.js").MeasuredTemplate} */
+
 const angle_epsilon = 1;
 
 /**
  * Convert point array to point object
  * @param arr {[x: number, y: number]}
- * @returns {{ x: number; y: number }}
+ * @returns {Point}
  */
 function a2p([x, y]) {
   return { x, y };
@@ -11,9 +13,7 @@ function a2p([x, y]) {
 
 /**
  * Convert point object to point array
- * @param p {object}
- * @param p.x {number}
- * @param p.y {number}
+ * @param p {Point}
  * @returns {[x: number, y: number]}
  */
 /* function p2a({ x, y }) {return [x, y];} */
@@ -25,6 +25,7 @@ function a2p([x, y]) {
 export class GAMeasuredTemplate extends MeasuredTemplate {
   /** @override */
   _getGridHighlightPositions() {
+    /** @type {BaseGrid} */
     const grid = canvas.grid.grid;
     const [row, col] = grid.getGridPositionFromPixels(this.x, this.y);
     const base_area = this._getBaseArea(row, col);
@@ -65,7 +66,6 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
    * "circle" (radius) then this is the template.
    * @param {number} row
    * @param {number} col
-   * @return {{x: number; y: number}[]}
    * @protected
    */
   _getBaseArea(row, col) {
@@ -90,6 +90,7 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
    * @protected
    */
   _getBaseAreaSquare(row, col) {
+    /** @type {SquareGrid} */
     const grid = canvas.grid.grid;
     const spaces = [];
     const r = this._getRadiusInSpaces();
@@ -120,10 +121,11 @@ export class GAMeasuredTemplate extends MeasuredTemplate {
    * @protected
    */
   _getBaseAreaHex(row, col) {
+    /** @type {HexagonalGrid} */
     const grid = canvas.grid.grid;
-    /** @type {Record<string, number>} */
     const cube = grid.offsetToCube({ row, col });
 
+    /** {GridHexCubeCoordinate[]} */
     const cubes = [];
     const r = this._getRadiusInSpaces();
     for (let i = -r; i <= r; ++i) {
