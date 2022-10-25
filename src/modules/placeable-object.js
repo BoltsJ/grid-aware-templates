@@ -1,4 +1,9 @@
 /** @typedef {import("client/pixi/placeables/template.js").MeasuredTemplate} */
+/**
+ * @typedef {object} Point
+ * @property x {number}
+ * @property y {number}
+ */
 
 const angle_epsilon = 1;
 
