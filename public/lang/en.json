@@ -3,6 +3,14 @@
 		"angleValue": {
 			"name": "Cone Angle",
 			"hint": "Override the system default angle for cones"
+		},
+		"enableSquare": {
+			"name": "Enable for square grids",
+			"hint": ""
+		},
+		"enableHex": {
+			"name": "Enable for hexagonal grids",
+			"hint": ""
 		}
 	}
 }
