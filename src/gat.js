@@ -1,14 +1,12 @@
 import { libWrapper } from "./libwrapper/shim";
 import { GAGetGridHighlightPositions } from "./modules/placeable-object";
 import { registerSettings } from "./modules/settings";
-import { GATemplateLayer } from "./modules/template-layer";
+import { GAOnDragLeftMove, GAOnDragLeftStart } from "./modules/template-layer";
 
 Hooks.once("init", () => {
   console.log("grid-aware-templates | Initializing module");
 
   registerSettings();
-
-  CONFIG.Canvas.layers.templates.layerClass = GATemplateLayer;
 });
 
 Hooks.once("setup", () => {
@@ -16,6 +14,20 @@ Hooks.once("setup", () => {
     "grid-aware-templates",
     "CONFIG.MeasuredTemplate.objectClass.prototype._getGridHighlightPositions",
     GAGetGridHighlightPositions,
+    libWrapper.MIXED
+  );
+
+  libWrapper.register(
+    "grid-aware-templates",
+    "CONFIG.Canvas.layers.templates.layerClass.prototype._onDragLeftStart",
+    GAOnDragLeftStart,
+    libWrapper.MIXED
+  );
+
+  libWrapper.register(
+    "grid-aware-templates",
+    "CONFIG.Canvas.layers.templates.layerClass.prototype._onDragLeftMove",
+    GAOnDragLeftMove,
     libWrapper.MIXED
   );
 });
