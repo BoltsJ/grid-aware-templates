@@ -127,7 +127,7 @@ function getBaseAreaSquare(template, row, col) {
       );
       if (
         grid.measureDistances([{ ray }], { gridSpaces: true }) /
-          this.document.parent.grid.distance <=
+          template.document.parent.grid.distance <=
         r
       )
         spaces.push({ row: row + i, col: col + j });
