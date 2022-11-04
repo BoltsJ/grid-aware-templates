@@ -1,4 +1,3 @@
-
 /**
  * @this {TemplateLayer}
  * @param {(event: PIXI.InteractionEvent) => Promise<void>} wrapped
@@ -7,7 +6,7 @@
 export function GAOnDragLeftStart(wrapped, event) {
   if (
     (canvas.grid.isHex &&
-      game.settings.get("grid-aware-temlates", "enableHex")) ||
+      game.settings.get("grid-aware-templates", "enableHex")) ||
     (canvas.grid.type === CONST.GRID_TYPES.SQUARE &&
       game.settings.get("grid-aware-templates", "enableSquare"))
   ) {
@@ -30,14 +29,15 @@ export function GAOnDragLeftMove(wrapped, event) {
     !(
       canvas.grid.isHex &&
       game.settings.get("grid-aware-templates", "enableHex")
-    ) ||
+    ) &&
     !(
       canvas.grid.type === CONST.GRID_TYPES.SQUARE &&
-      game.settings.get("gris-aware-templates", "enableSquare")
+      game.settings.get("grid-aware-templates", "enableSquare")
     )
   ) {
     return wrapped(event);
   }
+
   const { destination, createState, preview, origin } = event.data;
   if (createState === 0) return;
 
