@@ -11,6 +11,10 @@
 		"enableHex": {
 			"name": "Enable for hexagonal grids",
 			"hint": ""
+		},
+		"coarseAngleSnap": {
+			"name": "Coarse angle snapping",
+			"hint": "Use a 45° interval for square and a 30° interval for hex grids when creating templates instead of the default 15°."
 		}
 	}
 }
