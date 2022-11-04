@@ -63,8 +63,47 @@ export function GAGetGridHighlightPositions(wrapped) {
 }
 
 /**
+ * @this {MeasuredTemplate}
+ * @param {(event: PIXI.InteractionEvent) => Promise<unknown>} wrapped
+ * @param {PIXI.InteractionEvent} event
+ */
+export function GATemplateOnDragLeftDrop(wrapped, event) {
+  if (
+    !(
+      canvas.grid.isHex &&
+      game.settings.get("grid-aware-templates", "enableHex")
+    ) &&
+    !(
+      canvas.grid.type === CONST.GRID_TYPES.SQUARE &&
+      game.settings.get("grid-aware-templates", "enableSquare")
+    )
+  ) {
+    return wrapped(event);
+  }
+  const { clones, destination, originalEvent } = event.data;
+  if (!clones || !canvas.dimensions.rect.contains(destination.x, destination.y))
+    return false;
+  const updates = clones.map(c => {
+    let dest = { x: c.document.x, y: c.document.y };
+    if (!originalEvent.shiftKey) {
+      dest = a2p(canvas.grid.getCenter(c.document.x, c.document.y));
+    }
+    return {
+      _id: c._original.id,
+      x: dest.x,
+      y: dest.y,
+      rotation: c.document.rotation,
+    };
+  });
+  return canvas.scene.updateEmbeddedDocuments(
+    this.document.documentName,
+    updates
+  );
+}
+
+/**
  * Convert point array to point object
- * @param arr {[x: number, y: number]}
+ * @param {[x: number, y: number]}
  * @returns {Point}
  */
 function a2p([x, y]) {
