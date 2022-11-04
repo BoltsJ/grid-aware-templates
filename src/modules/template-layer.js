@@ -54,10 +54,18 @@ export function GAOnDragLeftMove(wrapped, event) {
 
   // Update the preview object
   // Snap the angle
-  const angle_snap = canvas.grid.type === CONST.GRID_TYPES.GRIDLESS ? 5 : 15;
-  preview.document.direction =
-    Math.round(Math.normalizeDegrees(Math.toDegrees(ray.angle)) / angle_snap) *
-    angle_snap;
+  const angle_snap =
+    canvas.grid.type === CONST.GRID_TYPES.GRIDLESS ||
+    ["rect", "ray"].includes(preview.document.t)
+      ? undefined
+      : game.settings.get("grid-aware-templates", "coarseAngleSnap")
+      ? canvas.grid.isHex
+        ? 30
+        : 45
+      : 15;
+  const direction = Math.normalizeDegrees(Math.toDegrees(ray.angle));
+  if (angle_snap) direction = Math.round(direction / angle_snap) * angle_snap;
+  preview.document.direction = direction;
   // Snap the distance
   const distance = Math.max(ray.distance / ratio, canvas.dimensions.distance);
   preview.document.distance =

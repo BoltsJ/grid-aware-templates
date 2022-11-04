@@ -47,4 +47,13 @@ export function registerSettings() {
       "angleValue"
     );
   }
+
+  game.settings.register("grid-aware-templates", "coarseAngleSnap", {
+    name: "grid-aware-templates.coarseAngleSnap.name",
+    hint: "grid-aware-templates.coarseAngleSnap.hint",
+    scope: "world",
+    config: true,
+    type: Boolean,
+    default: false,
+  });
 }
