@@ -63,7 +63,7 @@ export function GAOnDragLeftMove(wrapped, event) {
         ? 30
         : 45
       : 15;
-  const direction = Math.normalizeDegrees(Math.toDegrees(ray.angle));
+  let direction = Math.normalizeDegrees(Math.toDegrees(ray.angle));
   if (angle_snap) direction = Math.round(direction / angle_snap) * angle_snap;
   preview.document.direction = direction;
   // Snap the distance

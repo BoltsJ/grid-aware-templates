@@ -1,7 +1,7 @@
 import { libWrapper } from "./libwrapper/shim";
 import {
   GAGetGridHighlightPositions,
-  GATemplateOnDragLeftDrop
+  GATemplateOnDragLeftDrop,
 } from "./modules/placeable-object";
 import { registerSettings } from "./modules/settings";
 import { GAOnDragLeftMove, GAOnDragLeftStart } from "./modules/template-layer";
