@@ -1,7 +1,7 @@
 {
 	"id": "grid-aware-templates",
 	"title": "Grid Aware Templates",
-	"description": "",
+	"description": "Changes measured templates to highlight based on grid measurements",
 	"authors": [{ "name": "Bolts" }],
 	"version": "0",
 	"compatibility": {
