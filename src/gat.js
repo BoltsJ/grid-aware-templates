@@ -24,7 +24,7 @@ Hooks.once("setup", () => {
     "grid-aware-templates",
     "CONFIG.MeasuredTemplate.objectClass.prototype._onDragLeftDrop",
     GATemplateOnDragLeftDrop,
-    libWrapper.MIXED
+    libWrapper.WRAPPER
   );
 
   libWrapper.register(
