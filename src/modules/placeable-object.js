@@ -80,7 +80,8 @@ export function GATemplateOnDragLeftDrop(wrapped, event) {
   ) {
     return wrapped(event);
   }
-  const { clones, destination, originalEvent } = event.data;
+  const { originalEvent } = event.data;
+  const { clones, destination } = event.interactionData;
   if (!clones || !canvas.dimensions.rect.contains(destination.x, destination.y))
     return false;
   const updates = clones.map(c => {
@@ -185,7 +186,7 @@ function getBaseAreaSquare(template, row, col) {
 function getBaseAreaHex(template, row, col) {
   /** @type {HexagonalGrid} */
   const grid = canvas.grid.grid;
-  const cube = grid.offsetToCube({ row, col });
+  const cube = HexagonalGrid.offsetToCube({ row, col }, grid.options);
 
   /** {GridHexCubeCoordinate[]} */
   const cubes = [];
@@ -197,6 +198,6 @@ function getBaseAreaHex(template, row, col) {
     }
   }
   return cubes
-    .map(c => grid.cubeToOffset(c))
+    .map(c => HexagonalGrid.cubeToOffset(c, grid.options))
     .map(({ row, col }) => grid.getPixelsFromGridPosition(row, col));
 }

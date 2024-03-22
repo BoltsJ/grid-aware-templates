@@ -10,9 +10,9 @@ export function GAOnDragLeftStart(wrapped, event) {
     (canvas.grid.type === CONST.GRID_TYPES.SQUARE &&
       game.settings.get("grid-aware-templates", "enableSquare"))
   ) {
-    [event.data.origin.x, event.data.origin.y] = canvas.grid.getCenter(
-      event.data.origin.x,
-      event.data.origin.y
+    [event.interactionData.origin.x, event.interactionData.origin.y] = canvas.grid.getCenter(
+      event.interactionData.origin.x,
+      event.interactionData.origin.y
     );
   }
   return wrapped(event);
@@ -38,11 +38,12 @@ export function GAOnDragLeftMove(wrapped, event) {
     return wrapped(event);
   }
 
-  const { destination, createState, preview, origin } = event.data;
+  const { createState } = event.data;
+  const { destination, preview, origin } = event.interactionData;
   if (createState === 0) return;
 
   // Snap the destination to the grid
-  event.data.destination = canvas.grid.getSnappedPosition(
+  event.interactionData.destination = canvas.grid.getSnappedPosition(
     destination.x,
     destination.y,
     this.gridPrecision
