@@ -1,3 +1,4 @@
+import { buildHexBurstRange } from "./burst";
 /** @typedef {import("client/pixi/placeables/template.js").MeasuredTemplate} */
 /** @typedef {object} Point @property x {number} @property y {number} */
 
@@ -33,6 +34,10 @@ export function GAGetGridHighlightPositions(wrapped) {
 
   switch (this.document.t) {
     case "circle":
+      const flag = this.document.getFlag("grid-aware-templates", "burst");
+      if (flag?.token) {
+        return getBurstArea(this, row, col, flag?.token);
+      }
       return base_area;
     case "cone":
       // Create a unit vector in the template direction
@@ -188,16 +193,71 @@ function getBaseAreaHex(template, row, col) {
   const grid = canvas.grid.grid;
   const cube = HexagonalGrid.offsetToCube({ row, col }, grid.options);
 
-  /** {GridHexCubeCoordinate[]} */
+  /** @type {HexCubeCoordinate[]} */
   const cubes = [];
   const r = getRadiusInSpaces(template);
   for (let i = -r; i <= r; ++i) {
     for (let j = Math.max(-r, -i - r); j <= Math.min(r, -i + r); ++j) {
-      const k = -i - j;
-      cubes.push({ q: cube.q + i, r: cube.r + j, s: cube.s + k });
+      cubes.push({ q: cube.q + i, r: cube.r + j, s: cube.s - i - j });
     }
   }
   return cubes
     .map(c => HexagonalGrid.cubeToOffset(c, grid.options))
     .map(({ row, col }) => grid.getPixelsFromGridPosition(row, col));
+}
+
+/**
+ * @param {TokenDocument} token
+ * @returns {boolean} */
+function altOrientation(token) {
+  return (
+    game.modules
+      .get("hex-size-support")
+      ?.api?.isAltOrientation?.(token.object) ?? token.width === 2
+  );
+}
+
+function getBurstArea(template, row, col, token_id) {
+  if (!canvas?.ready) return [];
+  if (template.document.parent.grid.type === CONST.GRID_TYPES.SQUARE)
+    return getBurstAreaSquare(template, row, col).map(a2p);
+  if (
+    [
+      CONST.GRID_TYPES.HEXODDR,
+      CONST.GRID_TYPES.HEXEVENR,
+      CONST.GRID_TYPES.HEXODDQ,
+      CONST.GRID_TYPES.HEXEVENQ,
+    ].includes(template.document.parent.grid.type)
+  )
+    return getBurstAreaHex(template, row, col, token_id);
+}
+
+function getBurstAreaHex(template, row, col, token_id) {
+  /** @type {TokenDocument} */
+  const token = fromUuidSync(token_id);
+  const base_cube = HexagonalGrid.offsetToCube(
+    { row, col },
+    canvas.grid.grid.options
+  );
+  return buildHexBurstRange(
+    token.width,
+    template.document.distance,
+    altOrientation(token)
+  ).map(c =>
+    HexagonalGrid.offsetToPixels(
+      HexagonalGrid.cubeToOffset(
+        {
+          q: c.q + base_cube.q,
+          r: c.r + base_cube.r,
+          s: c.s + base_cube.s,
+        },
+        canvas.grid.grid.options
+      ),
+      canvas.grid.grid.options
+    )
+  );
+}
+
+function getBurstAreaSquare(template, row, col, token_id) {
+  return getBaseAreaSquare(template, row, col);
 }
