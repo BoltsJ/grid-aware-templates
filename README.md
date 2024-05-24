@@ -1,5 +1,8 @@
 # Grid Aware Templates
 
+> [!WARNING]
+> This module is not necessary on version 12 and up. On those versions you can enable "Grid Based Template Shapes" in the settings menu.
+
 Improves shape detection for measured templates on gridded maps. The default
 algorithm in foundry checks if a grid center is within the preview shape and
 highlights according to that. This approach is a poor choice for games that
